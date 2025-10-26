@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דיווח יומי - סניפים | יאפא כנאפה</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d6591 0%, #68dcc7 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d6591 0%, #68dcc7 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .form-content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #2d6591;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #68dcc7;
+            box-shadow: 0 0 0 3px rgba(104, 220, 199, 0.1);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+            background: white;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .radio-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 32px;
+            direction: ltr;
+        }
+
+        .star {
+            cursor: pointer;
+            color: #ddd;
+            transition: all 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffc243;
+            transform: scale(1.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2d6591 0%, #68dcc7 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(45, 101, 145, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d6591;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #68dcc7;
+        }
+
+        .helper-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            .form-content {
+                padding: 20px;
+            }
+
+            .star-rating {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="logo.jpg" alt="Yaffa Knafeh Logo">
+            </div>
+            <h1>דיווח יומי - סניפים</h1>
+            <p>יאפא כנאפה | Yaffa Knafeh</p>
+        </div>
+
+        <form class="form-content" id="branchForm">
+            <!-- תאריך וסניף -->
+            <div class="form-group">
+                <label for="date">תאריך הדיווח *</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="branch">שם הסניף *</label>
+                <select id="branch" name="branch" required>
+                    <option value="">בחר סניף...</option>
+                    <option value="סניף השוק">סניף השוק</option>
+                    <option value="סניף השעון">סניף השעון</option>
+                    <option value="סניף דיזינגוף">סניף דיזינגוף</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="reporterName">שם המדווח/ת *</label>
+                <input type="text" id="reporterName" name="reporterName" required placeholder="הזן שם מלא">
+            </div>
+
+            <!-- מלאי -->
+            <div class="section-title">📦 מלאי חסר</div>
+
+            <div class="form-group">
+                <label for="missingSweets">מתוקים חסרים</label>
+                <textarea id="missingSweets" name="missingSweets" placeholder="פרט אילו מתוקים חסרים..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="missingDrinks">שתייה חסרה</label>
+                <textarea id="missingDrinks" name="missingDrinks" placeholder="פרט אילו משקאות חסרים..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="missingDisposables">כלים חד פעמיים חסרים</label>
+                <textarea id="missingDisposables" name="missingDisposables" placeholder="פרט אילו כלים חסרים..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="missingToppings">תוספות חסרות</label>
+                <textarea id="missingToppings" name="missingToppings" placeholder="נענע, סוכר, סירופים, בוטנים, פיסטוק טחון, לימונדה קפואה..."></textarea>
+            </div>
+
+            <!-- רמת שרות -->
+            <div class="section-title">⭐ רמת שרות</div>
+
+            <div class="form-group">
+                <label>דרג את רמת השרות של העובדים כלפי הלקוחות *</label>
+                <div class="star-rating" id="serviceRating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="serviceRatingValue" name="serviceRating" required>
+                <div class="helper-text" id="ratingText">לחץ על כוכב כדי לדרג</div>
+            </div>
+
+            <!-- דירוגים בוולט -->
+            <div class="section-title">📱 דירוגים בוולט</div>
+
+            <div class="form-group">
+                <label>האם היו דירוגים נמוכים בוולט היום? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="lowRatingsYes" name="lowRatings" value="כן" required>
+                        <label for="lowRatingsYes">כן</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="lowRatingsNo" name="lowRatings" value="לא" required>
+                        <label for="lowRatingsNo">לא</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>האם טופלו? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="handledYes" name="ratingsHandled" value="כן">
+                        <label for="handledYes">כן</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="handledNo" name="ratingsHandled" value="לא">
+                        <label for="handledNo">לא</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="handledNA" name="ratingsHandled" value="לא רלוונטי">
+                        <label for="handledNA">לא רלוונטי</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>האם התקשרו ללקוחות לברר? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="calledYes" name="customersCalled" value="כן">
+                        <label for="calledYes">כן</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="calledNo" name="customersCalled" value="לא">
+                        <label for="calledNo">לא</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="calledNA" name="customersCalled" value="לא רלוונטי">
+                        <label for="calledNA">לא רלוונטי</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- תקלות בציוד -->
+            <div class="section-title">⚠️ תקלות בציוד</div>
+
+            <div class="form-group">
+                <label>האם היו תקלות בציוד? *</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="phone" name="equipment[]" value="טלפון">
+                        <label for="phone">טלפון</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="freezer" name="equipment[]" value="מקפיא">
+                        <label for="freezer">מקפיא</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="fridge" name="equipment[]" value="מקרר">
+                        <label for="fridge">מקרר</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="ac" name="equipment[]" value="מזגן">
+                        <label for="ac">מזגן</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lights" name="equipment[]" value="תאורה">
+                        <label for="lights">תאורה</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="bathroom" name="equipment[]" value="שירותים">
+                        <label for="bathroom">שירותים</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="kitchen" name="equipment[]" value="מטבח">
+                        <label for="kitchen">מטבח</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="drinks" name="equipment[]" value="ציוד שתיה חמה">
+                        <label for="drinks">ציוד שתיה חמה</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="grill" name="equipment[]" value="מנגל">
+                        <label for="grill">מנגל</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="other" name="equipment[]" value="אחר">
+                        <label for="other">אחר</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="equipmentDetails">פרט על התקלות (אם היו)</label>
+                <textarea id="equipmentDetails" name="equipmentDetails" placeholder="פרט מה הבעיה ומה נעשה..."></textarea>
+            </div>
+
+            <!-- בעיות משמעת -->
+            <div class="section-title">👥 בעיות משמעת</div>
+
+            <div class="form-group">
+                <label>האם נעדרו עובדים? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="absentYes" name="absences" value="כן" required>
+                        <label for="absentYes">כן</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="absentNo" name="absences" value="לא" required>
+                        <label for="absentNo">לא</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="absentNames">מי נעדר?</label>
+                <input type="text" id="absentNames" name="absentNames" placeholder="שמות העובדים שנעדרו">
+            </div>
+
+            <div class="form-group">
+                <label>האם איחרו עובדים? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="lateYes" name="lateArrivals" value="כן" required>
+                        <label for="lateYes">כן</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="lateNo" name="lateArrivals" value="לא" required>
+                        <label for="lateNo">לא</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="lateNames">מי איחר?</label>
+                <input type="text" id="lateNames" name="lateNames" placeholder="שמות העובדים שאיחרו">
+            </div>
+
+            <!-- תלונות לקוחות -->
+            <div class="section-title">💬 תלונות לקוחות</div>
+
+            <div class="form-group">
+                <label for="complaintNature">מהות התלונה</label>
+                <textarea id="complaintNature" name="complaintNature" placeholder="תאר את התלונה אם הייתה..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>האם התלונה טופלה? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="complaintHandledYes" name="complaintHandled" value="כן">
+                        <label for="complaintHandledYes">כן</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="complaintHandledNo" name="complaintHandled" value="לא">
+                        <label for="complaintHandledNo">לא</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="complaintHandledNA" name="complaintHandled" value="לא הייתה תלונה" checked>
+                        <label for="complaintHandledNA">לא הייתה תלונה</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="complaintHandler">מי טיפל?</label>
+                <input type="text" id="complaintHandler" name="complaintHandler" placeholder="שם המטפל">
+            </div>
+
+            <!-- הערות כלליות -->
+            <div class="section-title">📝 הערות כלליות</div>
+
+            <div class="form-group">
+                <label for="generalNotes">הערות כלליות</label>
+                <textarea id="generalNotes" name="generalNotes" placeholder="כל מידע נוסף שחשוב לדעת..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">📤 שלח דיווח</button>
+        </form>
+    </div>
+
+    <script>
+        // Star rating functionality
+        const stars = document.querySelectorAll('.star');
+        const ratingValue = document.getElementById('serviceRatingValue');
+        const ratingText = document.getElementById('ratingText');
+
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                ratingValue.value = value;
+                
+                stars.forEach(s => s.classList.remove('active'));
+                
+                for(let i = 0; i < value; i++) {
+                    stars[i].classList.add('active');
+                }
+                
+                const texts = ['גרוע', 'לא טוב', 'בסדר', 'טוב', 'מצוין'];
+                ratingText.textContent = texts[value - 1] + ' (' + value + '/5)';
+            });
+
+            star.addEventListener('mouseenter', function() {
+                const value = this.getAttribute('data-value');
+                for(let i = 0; i < value; i++) {
+                    stars[i].style.color = '#ffc243';
+                }
+            });
+
+            star.addEventListener('mouseleave', function() {
+                stars.forEach(s => {
+                    if (!s.classList.contains('active')) {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        });
+
+        // Google Apps Script URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0_R7QSdKYyfTxaz9XDqpXx-1nnibLYgiJ74q9xNIa3XM8UEGIyRr8kZ8G47HMlCif0w/exec';
+
+        // Form submission using Google Form method (works better!)
+        document.getElementById('branchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!ratingValue.value) {
+                alert('אנא דרג את רמת השרות!');
+                return;
+            }
+            
+            const submitBtn = this.querySelector('.submit-btn');
+            submitBtn.textContent = '⏳ שולח...';
+            submitBtn.disabled = true;
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = {
+                formType: 'branches'
+            };
+            
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            
+            // Create URL with parameters
+            const params = new URLSearchParams();
+            params.append('data', JSON.stringify(data));
+            
+            // Send using iframe (bypasses CORS)
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.name = 'hidden_iframe';
+            document.body.appendChild(iframe);
+            
+            // Create form and submit
+            const hiddenForm = document.createElement('form');
+            hiddenForm.target = 'hidden_iframe';
+            hiddenForm.method = 'POST';
+            hiddenForm.action = SCRIPT_URL;
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data';
+            input.value = JSON.stringify(data);
+            hiddenForm.appendChild(input);
+            
+            document.body.appendChild(hiddenForm);
+            hiddenForm.submit();
+            
+            // Wait a bit then show success
+            setTimeout(() => {
+                alert('✅ הדיווח נשלח בהצלחה!\n\nהנתונים נשמרו ב-Google Sheets.');
+                document.getElementById('branchForm').reset();
+                document.getElementById('date').valueAsDate = new Date();
+                stars.forEach(s => s.classList.remove('active'));
+                ratingText.textContent = '(בחר דירוג)';
+                submitBtn.textContent = '📤 שלח דיווח';
+                submitBtn.disabled = false;
+                
+                // Cleanup
+                document.body.removeChild(hiddenForm);
+                document.body.removeChild(iframe);
+            }, 1000);
+        });
+
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+    </script>
+</body>
+</html>
